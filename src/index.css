@@ -1,0 +1,131 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+html, body {
+    min-height: 100%;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+#size p {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+.sizeFix {
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    margin: auto;
+}
+
+h1 {
+    text-align: center;
+    font-size: 50px;
+    border-bottom: 1px solid black;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+}
+
+#height, #width {
+    width: 40px;
+    font-size: 15px;
+    margin-right: 10px;
+    text-align: center;
+}
+
+#startGameButton {
+    height: 27px;
+    width: 30px;
+}
+
+.mineSweeper {
+    display: flex;
+    justify-content: center;
+}
+
+.infoBox {
+    display: flex;
+    justify-content: center;
+    width: 50%;
+    margin: auto;
+    height: 60px;
+    margin-bottom: 5px;
+}
+
+.infoBox p {
+    width: 80px;
+    font-size: 43px;
+    align-self: center;
+}
+
+.infoBox button {
+    width: 43px;
+    height: 43px;
+    align-self: center;
+}
+
+.playAgain {
+    background-image: url('./img/happy-face-star-clipart-happy-face-clipart-2400_2400.jpg');
+    background-size: cover;
+}
+
+.userLost {
+    background-image: url('./img/sad-girl-clipart-nTXkapyTB.jpeg');
+    background-size: cover;
+}
+
+.userWon {
+    background-image: url('./img/smiley-face-star-clipart-4c9aMXKoi.jpeg');
+    background-size: cover;
+}
+
+.askCell, .flagCell, .cell, .opencell, .openmineCell {
+    width: 30px;
+    height: 30px;
+}
+
+.askCell {
+    background-image: url('./img/question-512.png');
+    background-color: dodgerblue;
+    border: groove;
+    border-color: black;
+    background-size: cover;
+}
+
+.flagCell {
+    background-image: url('./img/3079-256x256x32.png');
+    background-color: dodgerblue;
+    border: groove;
+    border-color: black;
+    background-size: cover;
+}
+
+.cell {
+    border: groove;
+    border-color: black;
+    background-color: dodgerblue;
+}
+
+.row {
+    display: flex;
+}
+
+.opencell {
+    background-color: black;
+    color: white;
+    font-weight: bolder;
+    font-size: 20px;
+    border: 2px solid white;
+}
+
+.openmineCell {
+    background-color: red;
+    border: groove;
+    background-image: url('./img/Mine.png');
+    background-size: cover;
+}

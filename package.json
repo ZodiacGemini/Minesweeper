@@ -1,0 +1,24 @@
+{
+  "name": "jqueryminesweeper",
+  "version": "1.0.0",
+  "description": "A simple minesweeper built with jquery",
+  "main": "index.js",
+  "author": "Alexander Edvinsson",
+  "license": "MIT",
+  "dependencies": {
+    "webpack": "^2.6.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "webpack": "^2.6.1",
+    "webpack-dev-server": "2.4.5"
+  },
+  "scripts": {
+    "start": "yarn run build",
+    "build": "webpack -d && cp src/index.html dist/index.html && cp src/index.css dist/index.css && webpack-dev-server --content-base src/ --inline --hot",
+    "build:prod": "webpack -p && cp src/index.html dist/index.html && src/index.css dist/index.css"
+  }
+}
