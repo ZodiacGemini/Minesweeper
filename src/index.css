@@ -67,8 +67,8 @@ h1 {
 }
 
 .infoBox button {
-    width: 43px;
-    height: 43px;
+    width: 60px;
+    height: 60px;
     align-self: center;
 }
 
@@ -102,19 +102,22 @@ h1 {
         text-align: center;
         margin-bottom: 5px;
     }
+    .nameTh {
+        text-align: left;
+    }
 
 .playAgain {
-    background-image: url('./img/happy-face-star-clipart-happy-face-clipart-2400_2400.jpg');
+    background-image: url('./img/Orup.jpg');
     background-size: cover;
 }
 
 .userLost {
-    background-image: url('./img/sad-girl-clipart-nTXkapyTB.jpeg');
+    background-image: url('./img/verySadOrup.jpg');
     background-size: cover;
 }
 
 .userWon {
-    background-image: url('./img/smiley-face-star-clipart-4c9aMXKoi.jpeg');
+    background-image: url('./img/VeryHappyOrup.jpg');
     background-size: cover;
 }
 

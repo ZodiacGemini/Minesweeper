@@ -19,6 +19,18 @@
                 <input type="number" id="width"/>
                 <button id="startGameButton" onclick="SetUpGame()">OK</button>
             </div>
+            <div class="easy">
+                <input type="number" id="height" value="9"/>
+                <input type="number" id="width" value="9"/>
+            </div>
+            <div class="medium">
+                <input type="number" id="height" value="16"/>
+                <input type="number" id="width" value="16"/>
+            </div>
+            <div class="expoert">
+                <input type="number" id="height" value="16"/>
+                <input type="number" id="width" value="32"/>
+            </div>
         </div>
         <div id="game" hidden="hidden">
             <div class="infoBox">
@@ -34,7 +46,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Name</th>
+                            <th class="nameTh">Name</th>
                             <th class="scoreTd">Score</th>
                         </tr>
                     </thead>

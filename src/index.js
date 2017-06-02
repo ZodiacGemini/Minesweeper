@@ -252,6 +252,7 @@ function StartGame() {
     function UserWon(i, j) {
         var closedCells = array
         .reduce((p, c) => c.filter(o => !o.open).length + p, 0);
+        
         if (closedCells == mines && array[i][j].mine == false) {
             array[i][j].open = true;
             $('.playAgain').attr('class', 'userWon')
@@ -291,6 +292,7 @@ function AskForHighScoreSubmit() {
                     while(true){
                         if(name.length <= 10){
                             AddHighScore(timer, name);
+                            $('#hsBody').append($('<tr/>', {html: '<td>' + name + '</td><td class="scoreTd">' + timer + '</td>'}))
                             break;
                     }
                         else{
@@ -300,7 +302,7 @@ function AskForHighScoreSubmit() {
             }
         }
         else{
-            alert('Too bad for highscore');
+            alert('Too bad!');
         }
     }
     else{
@@ -309,6 +311,7 @@ function AskForHighScoreSubmit() {
             while(true){
                 if(name.length <= 10){
                     AddHighScore(timer, name);
+                    $('#hsBody').append($('<tr/>', {html: '<td>' + name + '</td><td class="scoreTd">' + timer + '</td>'}))
                     break;
                 }
                 else{
@@ -329,15 +332,18 @@ function Reset() {
     $('#highScoreText').text('Lowscore ' + width + ' x ' + height);
 
     startTimer = setInterval(() => {timer++; $('#timer').text(timer)}, 1000);
-
+    topTenScore = []
     database.ref('/highscore/' + width + height + '/').once('value').then(function(snapshot) {
         let obj = snapshot.val()
         for(var key in obj){
             topTenScore.push({username: obj[key].username, score: obj[key].score});
         }
-        topTenScore = topTenScore.sort((a, b) => a.score - b.score).slice(0, 10);
+        topTenScore.sort((a, b) => a.score - b.score);
         topTenScore.forEach(c => {
-            $('#hsBody').append($('<tr/>', {html: '<td>' + c.username + '</td><td class="scoreTd">' + c.score + '</td>'}))
+            var newTr = $('<tr/>');
+            newTr.append($('<td/>', {text: c.username}))
+            newTr.append($('<td/>', {text: c.score, class: 'scoreTd'}))
+            $('#hsBody').append(newTr)
         })
     });
 }
