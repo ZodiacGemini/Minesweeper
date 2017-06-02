@@ -1,7 +1,7 @@
 var $mineSweeper = $('#myMineSweeper');
-var mines = 0;
 var height = 0;
 var width = 0;
+var mines = 0;
 var array = [];
 var flagCounter = 0;
 var timerAndHighscore = 1;
@@ -24,10 +24,19 @@ function UpdateCounterText(){
     .reduce((p, c) => p - c.filter(o => o.flag).length, mines);
     $('#counterText').text(nextCounter)
     flagCounter = nextCounter;
-    
 };
 
 function StartGame() {
+    if(width === 9 && height === 9){
+        mines = 10;
+    }
+    else if(width === 16 && height === 16){
+        mines = 40;
+    }
+    else if(width === 30 && height === 16){
+        mines = 99;
+    }
+    
     for (var i = 0; i < height; i++) {
         array[i] = [];
         for (var j = 0; j < width; j++) {
@@ -204,7 +213,7 @@ function StartGame() {
             default:
                 break;
         };
-        UpdateCounterText();          
+        UpdateCounterText(mines);          
     })
 
     $(document).on('click', '.cell', function (event) {
@@ -230,7 +239,7 @@ function StartGame() {
             clearInterval(startTimer);
         }
        
-        UpdateCounterText();
+        UpdateCounterText(mines);
         render();
     })
 
@@ -270,7 +279,7 @@ function StartGame() {
 function SetSize(w, h) {
     width = parseInt(w);
     height = parseInt(h);
-    mines = Math.round((width * height) / 8) + 1;
+    var mines = Math.round((width * height) / 8) + 1;
     $('#size').toggle();
     $('#game').toggle();
     ResetHighScore()
@@ -284,7 +293,7 @@ function SetCustomSize(w, h){
     width = parseInt(width);
     
     if(height >= 2 && width >= 2 && height <= 50 && width <= 50){
-        mines = Math.round((width * height) / 8) + 1;
+        var mines = Math.round((width * height) / 8) + 1;
         $('#size').toggle();
         $('#game').toggle();
         ResetHighScore()

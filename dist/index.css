@@ -149,12 +149,12 @@ h1 {
 }
 
 .userLost {
-    background-image: url('./img/verySadOrup.jpg');
+    background-image: url('./img/sadOrup.jpg');
     background-size: cover;
 }
 
 .userWon {
-    background-image: url('./img/VeryHappyOrup.jpg');
+    background-image: url('./img/happyOrup.jpg');
     background-size: cover;
 }
 
