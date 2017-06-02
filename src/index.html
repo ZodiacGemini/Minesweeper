@@ -24,13 +24,40 @@
             <div class="infoBox">
                 <p id="counterText" class="counterText"></p>
                 <button id="playAgain" class="playAgain" onclick="StartGame()"></button>
+                <p id="timer" class="timer">1</p>
             </div>
             <div class="mineSweeper">
                 <div id="myMineSweeper"></div>
             </div>
+            <div class="highscoreTable">
+            <p id="highScoreText">Lowscore</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th class="scoreTd">Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="hsBody">
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+    <script src="https://www.gstatic.com/firebasejs/4.1.1/firebase.js"></script>
+    <script>
+        var config = {
+            apiKey: "AIzaSyAi63Gr0pF8jtFXDY3ZrbxgW3U5tmyrxvU",
+            authDomain: "minesweeper-7f039.firebaseapp.com",
+            databaseURL: "https://minesweeper-7f039.firebaseio.com",
+            projectId: "minesweeper-7f039",
+            storageBucket: "minesweeper-7f039.appspot.com",
+            messagingSenderId: "893384414814"
+        };
+        firebase.initializeApp(config);
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="index.js"></script>
+    
 </body>
 </html>

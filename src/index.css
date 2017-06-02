@@ -57,10 +57,13 @@ h1 {
     margin-bottom: 5px;
 }
 
-.infoBox p {
+.infoBox p, .timer {
     width: 80px;
     font-size: 43px;
     align-self: center;
+}
+.infoBox .timer {
+    text-align: right;
 }
 
 .infoBox button {
@@ -68,6 +71,37 @@ h1 {
     height: 43px;
     align-self: center;
 }
+
+.highscoreTable {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 250px;
+    margin: auto;
+    margin-top: 10px;
+    border-color: black;
+    border: groove;
+    border-radius: 5px;
+    padding: 5px;
+}
+    .highscoreTable table {
+        align-self: center;
+    }
+    .highscoreTable td, th {
+        width: 50%;
+        font-size: 20px;
+    }
+    .highscoreTable th {
+        border-bottom: 1px solid black;        
+    }
+    .highscoreTable .scoreTd {
+        text-align: right;
+    }
+    .highscoreTable p {
+        font-size: 30px;
+        text-align: center;
+        margin-bottom: 5px;
+    }
 
 .playAgain {
     background-image: url('./img/happy-face-star-clipart-happy-face-clipart-2400_2400.jpg');
