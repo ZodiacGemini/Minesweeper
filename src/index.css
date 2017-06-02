@@ -11,17 +11,54 @@ html, body {
     flex-direction: column;
     justify-content: center;
 }
-#size p {
-    text-align: center;
-    font-size: 20px;
-    margin-bottom: 10px;
-}
-.sizeFix {
-    font-size: 20px;
+.size {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    width: 300px;
     margin: auto;
 }
+    .size div {
+        width: 100%;
+        margin: auto;
+    }
+        .fixedSizeButton {
+            width: 80%;
+            height: 35px;
+            margin: auto;
+            display: flex;
+            justify-content: center;
+            background-color: dodgerblue;
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+    .size p {
+        text-align: center;
+        font-size: 20px;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+    .customSize {
+        width: 80%;
+        margin: auto;
+        display: flex;
+        justify-content: center;     
+    }
+        .customSize input {
+            width: 30%;
+        }
+        .customSize button {
+            background-color: dodgerblue;
+            color: white;
+            min-width: 40%;
+            border-radius: 5px;
+            height: 35px;
+            font-size: 16px;
+            font-weight: bold;
+        }
 
 h1 {
     text-align: center;
@@ -112,12 +149,12 @@ h1 {
 }
 
 .userLost {
-    background-image: url('./img/verySadOrup.jpg');
+    background-image: url('./img/sadOrup.jpg');
     background-size: cover;
 }
 
 .userWon {
-    background-image: url('./img/VeryHappyOrup.jpg');
+    background-image: url('./img/happyOrup.jpg');
     background-size: cover;
 }
 

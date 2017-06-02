@@ -10,28 +10,28 @@
 <body>
     <div id="wrapper">
         <h1>Minesweeper</h1>
-        <div id="size">
-            <p id="chooseSize">Choose size</p>
-            <div class="sizeFix">
-                <label for="height">Height</label>
-                <input type="number" id="height"/>
-                <label for="width">Width</label>
-                <input type="number" id="width"/>
-                <button id="startGameButton" onclick="SetUpGame()">OK</button>
+        <div id="size" class="size">
+            <div>
+                <p>Toast</p>
+                <button class="fixedSizeButton" onclick="SetSize(9, 9)">9 x 9</button>
             </div>
-            <div class="easy">
-                <input type="number" id="height" value="9"/>
-                <input type="number" id="width" value="9"/>
+            <div>
+                <p>Pasta Bolognese</p>                
+                <button class="fixedSizeButton" onclick="SetSize(16, 16)">16 x 16</button>
             </div>
-            <div class="medium">
-                <input type="number" id="height" value="16"/>
-                <input type="number" id="width" value="16"/>
+            <div>
+                <p>Boeuf Bourguignon</p>                
+                <button class="fixedSizeButton" onclick="SetSize(30, 16)">30 x 16</button>            
             </div>
-            <div class="expoert">
-                <input type="number" id="height" value="16"/>
-                <input type="number" id="width" value="32"/>
+            <div>
+                <p id="chooseSize">Tacos</p>
+                <div class="customSize">
+                    <input type="number" id="height"/>
+                    <input type="number" id="width"/>
+                    <button id="startGameButton" onclick="SetCustomSize()">Go</button>
+                </div>
             </div>
-        </div>
+        </div>            
         <div id="game" hidden="hidden">
             <div class="infoBox">
                 <p id="counterText" class="counterText"></p>

@@ -4,7 +4,7 @@ var height = 0;
 var width = 0;
 var array = [];
 var flagCounter = 0;
-var timer = 1;
+var timerAndHighscore = 1;
 var startTimer;
 var topTenScore = [];
 var database = firebase.database();
@@ -15,7 +15,8 @@ function AddHighScore(number, name) {
     var highScore = {score: number, username: name};
     var updates = {};
     updates['/highscore/' + width + height + '/' + hsKey] = highScore;
-    return database.ref().update(updates)
+    database.ref().update(updates)
+    ResetHighScore();
 }
 
 function UpdateCounterText(){
@@ -266,7 +267,17 @@ function StartGame() {
     }
 }
 
-function SetUpGame(){
+function SetSize(w, h) {
+    width = parseInt(w);
+    height = parseInt(h);
+    mines = Math.round((width * height) / 8) + 1;
+    $('#size').toggle();
+    $('#game').toggle();
+    ResetHighScore()
+    StartGame();
+}
+
+function SetCustomSize(w, h){
     height = $('#height').val();
     height = parseInt(height);
     width = $('#width').val();
@@ -276,23 +287,23 @@ function SetUpGame(){
         mines = Math.round((width * height) / 8) + 1;
         $('#size').toggle();
         $('#game').toggle();
+        ResetHighScore()
         StartGame();
     }
     else{
-        $('#chooseSize').html('<p style="color: red;">Must be between 2 and 50<p/>');
+        $('#chooseSize').html('<p style="color: red;">Too many ingredients<p/>');
         return;
     }
 }
 
 function AskForHighScoreSubmit() {
     if(topTenScore.length >= 10){
-        if(topTenScore[9].score > timer){
+        if(topTenScore[9].score > timerAndHighscore){
                 if(confirm('Top ten! Submit highscore?')){
                     var name = prompt('Choose name (max 10 characters)')
                     while(true){
                         if(name.length <= 10){
-                            AddHighScore(timer, name);
-                            $('#hsBody').append($('<tr/>', {html: '<td>' + name + '</td><td class="scoreTd">' + timer + '</td>'}))
+                            AddHighScore(timerAndHighscore, name);
                             break;
                     }
                         else{
@@ -310,8 +321,7 @@ function AskForHighScoreSubmit() {
             var name = prompt('Choose name (max 10 characters)')
             while(true){
                 if(name.length <= 10){
-                    AddHighScore(timer, name);
-                    $('#hsBody').append($('<tr/>', {html: '<td>' + name + '</td><td class="scoreTd">' + timer + '</td>'}))
+                    AddHighScore(timerAndHighscore, name);
                     break;
                 }
                 else{
@@ -326,12 +336,15 @@ function Reset() {
     UpdateCounterText()
     $('#playAgain').attr('class', 'playAgain')
     try {clearInterval(startTimer);} catch (error) {}
-    timer = 1;
-    $('#timer').text(timer);
-    $('#hsBody').empty();
-    $('#highScoreText').text('Lowscore ' + width + ' x ' + height);
+    timerAndHighscore = 1;
+    $('#timer').text(timerAndHighscore);
+    startTimer = setInterval(() => {timerAndHighscore++; $('#timer').text(timerAndHighscore)}, 1000);
+    
+}
 
-    startTimer = setInterval(() => {timer++; $('#timer').text(timer)}, 1000);
+function ResetHighScore() {
+    $('#highScoreText').text('Lowscore ' + width + ' x ' + height);    
+    $('#hsBody').empty();    
     topTenScore = []
     database.ref('/highscore/' + width + height + '/').once('value').then(function(snapshot) {
         let obj = snapshot.val()
