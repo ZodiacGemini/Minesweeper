@@ -209,9 +209,10 @@ h1 {
         margin-top: 10px;
         font-weight: bold;
     }
-    .customSize #width, #height {
-            width: 40%;
+    .customSize .ui-input-text {
+            width: 48%;
             font-size: 15px;
+            display: inline-block;
             text-align: center;
             margin: auto;
     }
