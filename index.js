@@ -195,8 +195,8 @@ function StartGame() {
     }
     
     $(document).on('contextmenu', '.flagCell, .cell, .askCell', function(e) { TriggerRightClick(e)});
-    $(document).on('contextmenu', function(event){
-        event.preventDefault();
+    $(document).on('contextmenu', '.opencell', function(event){
+        return false;
     })
     function TriggerRightClick(event){
         console.log(event);
