@@ -397,7 +397,7 @@ function ResetHighScore() {
         for(var key in obj){
             topTenScore.push({username: obj[key].username, score: obj[key].score});
         }
-        topTenScore.sort((a, b) => a.score - b.score);
+        topTenScore.sort((a, b) => a.score - b.score).slice(0, 10);
         topTenScore.forEach(c => {
             var newTr = $('<tr/>');
             newTr.append($('<td/>', {text: c.username}))
