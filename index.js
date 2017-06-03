@@ -143,6 +143,7 @@ function StartGame() {
     };
 
     function OpenSurroundingNonFlaggedCells(i, j) {
+        console.log(i, j);
         var surroundingCells = [[i + 1, j], [i + 1, j + 1], [i + 1, j - 1], [i - 1, j], [i - 1, j - 1], [i - 1, j + 1], [i, j + 1], [i, j - 1]];
         var validCells = surroundingCells.filter((cell) => {
             let k = cell[0]
@@ -156,6 +157,7 @@ function StartGame() {
         });
         if(flagCells.length == array[i][j].number){
             validCells.forEach((cell) => {
+                console.log(cell);
                 let k = cell[0];
                 let l = cell[1];
                 if(!array[k][l].flag){
@@ -178,14 +180,17 @@ function StartGame() {
         render();
     };
 
-    $(document).on('dblclick', '.opencell', function (e) {
+    $(document).on('dblclick', '.opencell', (e) => TriggerDoubleClick(e));
+    $(document).on('taphold', '.opencell', (e) => TriggerDoubleClick(e));
+    
+    function TriggerDoubleClick(e){
         e.stopImmediatePropagation();
-        var $cell = $(this);
-        var i = $cell.data('i');
-        var j = $cell.data('j');
+        var i = e.currentTarget.getAttribute('data-i');
+        var j = e.currentTarget.getAttribute('data-j');
+        i = parseInt(i);
+        j = parseInt(j);
         OpenSurroundingNonFlaggedCells(i, j);
-    });
-
+    }
     $(document).on('contextmenu', '.flagCell, .cell, .askCell', function (event) {
         event.preventDefault();
         event.stopImmediatePropagation();
@@ -245,7 +250,7 @@ function StartGame() {
        
         UpdateCounterText(mines);
         render();
-    })
+    });
 
     function ClickedOnZero(i, j) {
         array[i][j].open = true;
@@ -278,6 +283,7 @@ function StartGame() {
         else
             return false;
     }
+    
 }
 
 function SetSize(w, h) {
