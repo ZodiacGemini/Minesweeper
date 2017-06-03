@@ -10,6 +10,7 @@
 <body>
     <div id="wrapper">
         <h1>Minesweeper</h1>
+        
         <div id="size" class="size">
             <div>
                 <p>Toast</p>
@@ -33,13 +34,14 @@
             </div>
         </div>            
         <div id="game" hidden="hidden">
+            <button id="switchSize" onclick="SwitchSize()">Switch Size</button>
             <div class="infoBox">
                 <button id="flagButton" class="flagButton" onclick="SwitchToFlag()"></button>
                 <p id="counterText" class="counterText"></p>
                 <button id="playAgain" class="playAgain" onclick="StartGame()"></button>
                 <p id="timer" class="timer">1</p>
             </div>
-            <div class="mineSweeper">
+            <div id="minesweep" class="mineSweeper">
                 <div id="myMineSweeper"></div>
             </div>
             <div class="highscoreTable">

@@ -37,7 +37,14 @@ function StartGame() {
     else if(width === 30 && height === 16){
         mines = 99;
     }
-    
+
+    if(width > 10){
+        $('#minesweep').attr('class', 'mineSweeperLarge mineSweeper');
+    }
+    else {
+        $('#minesweep').attr('class', 'mineSweeper')
+    }
+    array = [];
     for (var i = 0; i < height; i++) {
         array[i] = [];
         for (var j = 0; j < width; j++) {
@@ -144,7 +151,6 @@ function StartGame() {
     };
 
     function OpenSurroundingNonFlaggedCells(i, j) {
-        console.log(i, j);
         var surroundingCells = [[i + 1, j], [i + 1, j + 1], [i + 1, j - 1], [i - 1, j], [i - 1, j - 1], [i - 1, j + 1], [i, j + 1], [i, j - 1]];
         var validCells = surroundingCells.filter((cell) => {
             let k = cell[0]
@@ -158,7 +164,6 @@ function StartGame() {
         });
         if(flagCells.length == array[i][j].number){
             validCells.forEach((cell) => {
-                console.log(cell);
                 let k = cell[0];
                 let l = cell[1];
                 if(!array[k][l].flag){
@@ -199,7 +204,6 @@ function StartGame() {
         return false;
     })
     function TriggerRightClick(event){
-        console.log(event);
         var cell = event.currentTarget;
         event.preventDefault();
         event.stopImmediatePropagation();
@@ -250,7 +254,6 @@ function StartGame() {
     function TriggerClick(event){
         event.stopImmediatePropagation();
         var $cell = event.currentTarget
-        console.log($cell)
         var i = $cell.getAttribute('data-i');
         var j = $cell.getAttribute('data-j');
         i = parseInt(i);
@@ -314,10 +317,10 @@ function SetSize(w, h) {
     width = parseInt(w);
     height = parseInt(h);
     var mines = Math.round((width * height) / 8) + 1;
+    StartGame();
+    ResetHighScore()
     $('#size').toggle();
     $('#game').toggle();
-    ResetHighScore()
-    StartGame();
 }
 
 function SetCustomSize(w, h){
@@ -407,4 +410,10 @@ function ResetHighScore() {
 function SwitchToFlag() {
     mobileFlag = !mobileFlag;
     $('#flagButton').toggleClass('active')
+}
+
+function SwitchSize() {
+    $('#game').toggle();
+    $('#size').toggle();
+    $mineSweeper.empty();
 }
