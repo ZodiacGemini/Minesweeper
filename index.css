@@ -11,7 +11,7 @@ html, body {
     flex-direction: column;
     justify-content: center;
 }
-@media(min-width: 601px){
+@media screen and (min-width: 681px){
 .size {
     display: flex;
     flex-direction: column;
@@ -23,18 +23,6 @@ html, body {
         width: 100%;
         margin: auto;
     }
-        .fixedSizeButton {
-            width: 80%;
-            height: 35px;
-            margin: auto;
-            display: flex;
-            justify-content: center;
-            background-color: dodgerblue;
-            color: white;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: bold;
-        }
 
     .size p {
         text-align: center;
@@ -44,10 +32,11 @@ html, body {
     }
     .customSize {
         display: flex;
-        justify-content: center;     
+        justify-content: center;
+        width: 80%;  
     }
-        .customSize input {
-            width: 23%;
+        .customSize #width, #height {
+            width: 100%;
             font-size: 15px;
             text-align: center;
         }
@@ -205,7 +194,7 @@ h1 {
         display: none;
 }
 
-@media(max-width: 600px){
+@media(max-width: 680px){
     #flagButton {
         display: block;
         width: 40px;
