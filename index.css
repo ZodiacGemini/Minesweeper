@@ -42,22 +42,23 @@ html, body {
         font-weight: bold;
     }
     .customSize {
-        width: 80%;
-        margin: auto;
         display: flex;
         justify-content: center;     
     }
         .customSize input {
-            width: 30%;
+            width: 23%;
+            font-size: 15px;
+            text-align: center;
         }
         .customSize button {
             background-color: dodgerblue;
             color: white;
-            min-width: 40%;
+            min-width: 29%;
             border-radius: 5px;
             height: 35px;
             font-size: 16px;
             font-weight: bold;
+            margin-left: 5px;
         }
 
 h1 {
@@ -66,18 +67,6 @@ h1 {
     border-bottom: 1px solid black;
     margin-bottom: 10px;
     padding-bottom: 5px;
-}
-
-#height, #width {
-    width: 40px;
-    font-size: 15px;
-    margin-right: 10px;
-    text-align: center;
-}
-
-#startGameButton {
-    height: 27px;
-    width: 30px;
 }
 
 .mineSweeper {
@@ -94,20 +83,21 @@ h1 {
     margin-bottom: 5px;
 }
 
-.infoBox p, .timer {
-    width: 80px;
-    font-size: 43px;
-    align-self: center;
-}
-.infoBox .timer {
-    text-align: right;
-}
+    .infoBox p, .timer {
+        width: 80px;
+        font-size: 43px;
+        align-self: center;
+    }
 
-.infoBox button {
-    width: 60px;
-    height: 60px;
-    align-self: center;
-}
+    .infoBox .timer {
+        text-align: right;
+    }
+
+    .infoBox button {
+        width: 60px;
+        height: 60px;
+        align-self: center;
+    }
 
 .highscoreTable {
     display: flex;
@@ -158,7 +148,7 @@ h1 {
     background-size: cover;
 }
 
-.askCell, .flagCell, .cell, .opencell, .openmineCell {
+.askCell, .flagCell, .cell, .opencell, .openmineCell, .openmineCellFlagged {
     width: 30px;
     height: 30px;
 }
@@ -198,8 +188,13 @@ h1 {
 }
 
 .openmineCell {
-    background-color: red;
     border: groove;
-    background-image: url('./img/Mine.png');
+    background-image: url('./img/MineRed.jpg');
+    background-size: cover;
+}
+
+.openmineCellFlagged {
+    border: groove;
+    background-image: url('./img/MineGreen.jpg');
     background-size: cover;
 }

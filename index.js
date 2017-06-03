@@ -110,7 +110,11 @@ function StartGame() {
                 $myRow.append($('<button/>', {
                     type: 'button', 'data-i': i, 'data-j': j,
                     text: selectedCell.open ? text : ' ',
-                    class: selectedCell.open && selectedCell.mine ? 'openmineCell' : selectedCell.open ? 'opencell' : selectedCell.flag ? 'flagCell' : selectedCell.ask ? 'askCell' : 'cell'
+                    class: selectedCell.open && selectedCell.mine && selectedCell.flag ? 'openmineCellFlagged'
+                    : selectedCell.open && selectedCell.mine ? 'openmineCell' 
+                    : selectedCell.open ? 'opencell' 
+                    : selectedCell.flag ? 'flagCell' 
+                    : selectedCell.ask ? 'askCell' : 'cell'
                 }))
             }
         }
