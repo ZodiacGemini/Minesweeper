@@ -106,12 +106,10 @@ h1 {
         align-self: center;
     }
     .highscoreTable td, th {
-        width: 50%;
+        width: 33%;
         font-size: 20px;
     }
-    .highscoreTable th {
-        border-bottom: 1px solid black;        
-    }
+    
     .highscoreTable .scoreTd {
         text-align: right;
     }
