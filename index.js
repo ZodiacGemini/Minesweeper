@@ -8,6 +8,7 @@ var timerAndHighscore = 1;
 var startTimer;
 var topTenScore = [];
 var database = firebase.database();
+var mobileFlag = false;
 
 
 function AddHighScore(number, name) {
@@ -191,16 +192,20 @@ function StartGame() {
         j = parseInt(j);
         OpenSurroundingNonFlaggedCells(i, j);
     }
-    $(document).on('contextmenu', '.flagCell, .cell, .askCell', function (event) {
+    
+    $(document).on('contextmenu', '.flagCell, .cell, .askCell', function(e) { TriggerRightClick(e)});
+
+    function TriggerRightClick(event){
+        console.log(event);
+        var cell = event.currentTarget;
         event.preventDefault();
         event.stopImmediatePropagation();
-        var $cell = $(this);
-        const setCellClass = (n) => $cell.attr('class', n);
+        const setCellClass = (n) => cell.setAttribute('class', n);
 
-        var i = $cell.data('i');
-        var j = $cell.data('j');
+        var i = cell.getAttribute('data-i');
+        var j = cell.getAttribute('data-j');
         
-        switch($cell.attr('class')){
+        switch(cell.getAttribute('class')){
             case 'cell':
                 if(flagCounter >= 1){
                     array[i][j].flag = true;             
@@ -222,15 +227,31 @@ function StartGame() {
             default:
                 break;
         };
-        UpdateCounterText(mines);          
-    })
+        UpdateCounterText(mines);
+    }
 
     $(document).on('click', '.cell', function (event) {
-        event.stopImmediatePropagation();
-        var $cell = $(this)
-        var i = $cell.data('i');
-        var j = $cell.data('j');
+        if(mobileFlag) {
+            TriggerRightClick(event);
+            return;
+        }
+        TriggerClick(event);
+    });
 
+    $(document).on('click', '.askCell, .flagCell', function (event) {
+        if(mobileFlag){
+            TriggerRightClick(event)
+        }
+    });
+
+    function TriggerClick(event){
+        event.stopImmediatePropagation();
+        var $cell = event.currentTarget
+        console.log($cell)
+        var i = $cell.getAttribute('data-i');
+        var j = $cell.getAttribute('data-j');
+        i = parseInt(i);
+        j = parseInt(j);
         if (array[i][j].number != 0) {
             array[i][j].open = true;
         }
@@ -250,7 +271,7 @@ function StartGame() {
        
         UpdateCounterText(mines);
         render();
-    });
+    }
 
     function ClickedOnZero(i, j) {
         array[i][j].open = true;
@@ -378,4 +399,9 @@ function ResetHighScore() {
             $('#hsBody').append(newTr)
         })
     });
+}
+
+function SwitchToFlag() {
+    mobileFlag = !mobileFlag;
+    $('#flagButton').toggleClass('active')
 }
