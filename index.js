@@ -31,9 +31,11 @@ function StartGame() {
     if(width === 9 && height === 9){
         mines = 10;
     }
+
     else if(width === 16 && height === 16){
         mines = 40;
     }
+
     else if(width === 30 && height === 16){
         mines = 99;
     }
@@ -41,9 +43,11 @@ function StartGame() {
     if(width > 10){
         $('#minesweep').attr('class', 'mineSweeperLarge mineSweeper');
     }
+
     else {
         $('#minesweep').attr('class', 'mineSweeper')
     }
+
     array = [];
     for (var i = 0; i < height; i++) {
         array[i] = [];
@@ -79,21 +83,15 @@ function StartGame() {
         for (var i = 0; i < array.length; i++) {
             for (var j = 0; j < array[i].length; j++) {
                 if (!array[i][j].mine) {
-                    var surroundingCells = GetSurroundingMines(array, i, j);
-                    array[i][j].number = surroundingCells.length;
+                    var surroundingMineCells = GetSurroundingMines(array, i, j);
+                    array[i][j].number = surroundingMineCells.length;
                 }
             }
         }
     };
 
     function GetSurroundingMines(array, i, j) {
-        var simonCells = [[i + 1, j], [i + 1, j + 1], [i + 1, j - 1], [i - 1, j], [i - 1, j - 1], [i - 1, j + 1], [i, j + 1], [i, j - 1]];
-
-        var validCells = simonCells.filter(function (cell) {
-            var i = cell[0]
-            var j = cell[1]
-            return i >= 0 && i < array.length && j >= 0 && j < array[0].length
-        })
+        var validCells = FilterCells(i, j);
         var realCells = validCells.map(function (cell) {
             var i = cell[0]
             var j = cell[1]
@@ -104,7 +102,7 @@ function StartGame() {
         })
         return numberOfMines;
     };
-    //Reset counter and button picture
+
     Reset();
     render();
     function render() {
@@ -114,7 +112,7 @@ function StartGame() {
             $mineSweeper.append($myRow)
             for (var j = 0; j < array[i].length; j++) {
                 var selectedCell = array[i][j]
-                var text = selectedCell.mine ? ' ' : selectedCell.number > 0 ? selectedCell.number : ' ';
+                var text = selectedCell.number > 0 ? selectedCell.number : ' ';
                 $myRow.append($('<button/>', {
                     type: 'button', 'data-i': i, 'data-j': j,
                     text: selectedCell.open ? text : ' ',
@@ -128,13 +126,35 @@ function StartGame() {
         }
     };
 
-    function OpenSurroundingCells(i, j) {
+    $(document).on('dblclick', '.opencell', (e) => TriggerDoubleClick(e));
+    $(document).on('doubletap', '.opencell', (e) => TriggerDoubleClick(e));
+    $(document).on('contextmenu', '.flagCell, .cell, .askCell', function(e) { TriggerRightClick(e)});
+    $(document).on('contextmenu', '.opencell', function(e){return false;});
+    $(document).on('click', '.cell', function (event) {
+        if(mobileFlag) {
+            TriggerRightClick(event);
+            return;
+        }
+        TriggerClick(event);
+    });
+    $(document).on('click', '.askCell, .flagCell', function (event) {
+        if(mobileFlag){
+            TriggerRightClick(event)
+        }
+    });
+
+    function FilterCells(i, j){
         var surroundingCells = [[i + 1, j], [i + 1, j + 1], [i + 1, j - 1], [i - 1, j], [i - 1, j - 1], [i - 1, j + 1], [i, j + 1], [i, j - 1]];
         var validCells = surroundingCells.filter((cell) => {
             var i = cell[0]
             var j = cell[1]
             return i >= 0 && i < array.length && j >= 0 && j < array[0].length
         });
+        return validCells;
+    }
+
+    function OpenSurroundingCells(i, j) {
+        var validCells = FilterCells(i, j);
         var cellsForRecursion = validCells.filter((cell) => {
             i = cell[0]
             j = cell[1]
@@ -151,12 +171,7 @@ function StartGame() {
     };
 
     function OpenSurroundingNonFlaggedCells(i, j) {
-        var surroundingCells = [[i + 1, j], [i + 1, j + 1], [i + 1, j - 1], [i - 1, j], [i - 1, j - 1], [i - 1, j + 1], [i, j + 1], [i, j - 1]];
-        var validCells = surroundingCells.filter((cell) => {
-            let k = cell[0]
-            let l = cell[1]
-            return k >= 0 && k < array.length && l >= 0 && l < array[0].length
-        });
+        var validCells = FilterCells(i, j);
         var flagCells = validCells.filter((cell) => {
             let k = cell[0]
             let l = cell[1]
@@ -183,11 +198,39 @@ function StartGame() {
         }
         if(UserWon(i, j))
             clearInterval(startTimer);
+        
         render();
     };
 
-    $(document).on('dblclick', '.opencell', (e) => TriggerDoubleClick(e));
-    $(document).on('doubletap', '.opencell', (e) => TriggerDoubleClick(e));
+    function TriggerClick(event){
+        event.stopImmediatePropagation();
+        var $cell = event.currentTarget
+        var i = $cell.getAttribute('data-i');
+        var j = $cell.getAttribute('data-j');
+        i = parseInt(i);
+        j = parseInt(j);
+
+        if (array[i][j].number != 0) {
+            array[i][j].open = true;
+        }
+
+        else if (array[i][j].number == 0 && !array[i][j].mine) {
+            ClickedOnZero(i, j);
+        }
+
+        else if (array[i][j].mine) {
+            array.forEach(r => r.forEach(cell => cell.open = true));
+            $('.playAgain').attr('class', 'userLost')
+            clearInterval(startTimer);
+        };
+
+        if(UserWon(i, j)){
+            clearInterval(startTimer);
+        }
+       
+        UpdateCounterText(mines);
+        render();
+    }
 
     function TriggerDoubleClick(e){
         e.stopImmediatePropagation();
@@ -198,11 +241,7 @@ function StartGame() {
         j = parseInt(j);
         OpenSurroundingNonFlaggedCells(i, j);
     }
-    
-    $(document).on('contextmenu', '.flagCell, .cell, .askCell', function(e) { TriggerRightClick(e)});
-    $(document).on('contextmenu', '.opencell', function(event){
-        return false;
-    })
+
     function TriggerRightClick(event){
         var cell = event.currentTarget;
         event.preventDefault();
@@ -235,48 +274,6 @@ function StartGame() {
                 break;
         };
         UpdateCounterText(mines);
-    }
-
-    $(document).on('click', '.cell', function (event) {
-        if(mobileFlag) {
-            TriggerRightClick(event);
-            return;
-        }
-        TriggerClick(event);
-    });
-
-    $(document).on('click', '.askCell, .flagCell', function (event) {
-        if(mobileFlag){
-            TriggerRightClick(event)
-        }
-    });
-
-    function TriggerClick(event){
-        event.stopImmediatePropagation();
-        var $cell = event.currentTarget
-        var i = $cell.getAttribute('data-i');
-        var j = $cell.getAttribute('data-j');
-        i = parseInt(i);
-        j = parseInt(j);
-        if (array[i][j].number != 0) {
-            array[i][j].open = true;
-        }
-        else if (array[i][j].number == 0 && !array[i][j].mine) {
-            ClickedOnZero(i, j);
-        }
-
-        else if (array[i][j].mine) {
-            array.forEach(r => r.forEach(cell => cell.open = true));
-            $('.playAgain').attr('class', 'userLost')
-            clearInterval(startTimer);
-        };
-
-        if(UserWon(i, j)){
-            clearInterval(startTimer);
-        }
-       
-        UpdateCounterText(mines);
-        render();
     }
 
     function ClickedOnZero(i, j) {
@@ -401,7 +398,7 @@ function ResetHighScore() {
         topTenScore.forEach((c, i) => {
             var newTr = $('<tr/>');
             newTr.append($('<td/>', {text: i + 1}))
-            newTr.append($('<td/>', {text: c.username}))
+            newTr.append($('<td/>', {text: c.username, class: 'nameTd'}))
             newTr.append($('<td/>', {text: c.score, class: 'scoreTd'}))
             $('#hsBody').append(newTr)
         })
