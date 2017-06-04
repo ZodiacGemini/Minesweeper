@@ -304,5 +304,13 @@ h1 {
         margin-bottom: 10px;
         width: 100%;
     }
+    input {
+        width: 48%;
+    }
+    .whContainer{
+        display: flex;
+        width: 100%;
+    }
+    
 }
 
