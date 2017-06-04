@@ -127,6 +127,7 @@ function StartGame() {
     };
 
     $(document).on('dblclick', '.opencell', (e) => TriggerDoubleClick(e));
+    $(document).on('doubletap', '#flagButton, .flagCell, .cell, .askCell', function(e){ return false;});
     $(document).on('doubletap', '.opencell', (e) => TriggerDoubleClick(e));
     $(document).on('contextmenu', '.flagCell, .cell, .askCell', function(e) { TriggerRightClick(e)});
     $(document).on('contextmenu', '.opencell', function(e){return false;});
