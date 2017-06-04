@@ -235,6 +235,7 @@ function StartGame() {
     function TriggerDoubleClick(e){
         e.stopImmediatePropagation();
         e.preventDefault();
+        e.currentTarget.preventDefault();
         var i = e.currentTarget.getAttribute('data-i');
         var j = e.currentTarget.getAttribute('data-j');
         i = parseInt(i);
