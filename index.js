@@ -187,7 +187,6 @@ function StartGame() {
     };
 
     $(document).on('dblclick', '.opencell', (e) => TriggerDoubleClick(e));
-    $(document).on('taphold', '.opencell', (e) => TriggerDoubleClick(e));
     $(document).on('doubletap', '.opencell', (e) => TriggerDoubleClick(e));
 
     function TriggerDoubleClick(e){
@@ -360,7 +359,7 @@ function AskForHighScoreSubmit() {
             }
         }
         else{
-            alert('Too bad!');
+            alert('Yay!! no highscore though!');
         }
     }
     else{
@@ -415,6 +414,7 @@ function SwitchToFlag() {
 }
 
 function SwitchSize() {
+    $('#chooseSize').text('Tacos');
     $('#game').toggle();
     $('#size').toggle();
     $mineSweeper.empty();
