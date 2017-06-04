@@ -188,7 +188,12 @@ function StartGame() {
 
     $(document).on('dblclick', '.opencell', (e) => TriggerDoubleClick(e));
     $(document).on('taphold', '.opencell', (e) => TriggerDoubleClick(e));
-    
+
+    canvas
+    .hammer({prevent_default: true})
+    .bind('doubletap', function(e) { TriggerDoubleClick(e)
+    });
+
     function TriggerDoubleClick(e){
         e.stopImmediatePropagation();
         e.preventDefault();
@@ -316,7 +321,7 @@ function StartGame() {
 function SetSize(w, h) {
     width = parseInt(w);
     height = parseInt(h);
-    var mines = Math.round((width * height) / 8) + 1;
+    mines = Math.round((width * height) / 8) + 1;
     StartGame();
     ResetHighScore()
     $('#size').toggle();
@@ -330,7 +335,7 @@ function SetCustomSize(w, h){
     width = parseInt(width);
     
     if(height >= 2 && width >= 2 && height <= 50 && width <= 50){
-        var mines = Math.round((width * height) / 8) + 1;
+        mines = Math.round((width * height) / 8) + 1;
         $('#size').toggle();
         $('#game').toggle();
         ResetHighScore()
