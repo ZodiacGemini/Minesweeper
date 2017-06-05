@@ -127,7 +127,7 @@ function StartGame() {
     };
 
     $(document).on('dblclick', '.opencell', (e) => TriggerDoubleClick(e));
-    $(document).on('doubletap', '.opencell', function (e){ e.preventDefault(); TriggerDoubleClick(e);});
+    $(document).on('doubletap', '.opencell', function (e){TriggerDoubleClick(e);});
     $(document).on('contextmenu', '.flagCell, .cell, .askCell', function(e) { TriggerRightClick(e)});
     $(document).on('contextmenu', '.opencell', function(e){return false;});
     $(document).on('click', '.cell', function (event) {
@@ -376,8 +376,8 @@ function AskForHighScoreSubmit() {
 }
 
 function Reset() {
-    UpdateCounterText()
-    $('#playAgain').attr('class', 'playAgain')
+    UpdateCounterText();
+    $('#playAgain').attr('class', 'playAgain');
     try {clearInterval(startTimer);} catch (error) {}
     timerAndHighscore = 1;
     $('#timer').text(timerAndHighscore);
@@ -397,21 +397,23 @@ function ResetHighScore() {
         topTenScore = topTenScore.sort((a, b) => a.score - b.score).slice(0, 10);
         topTenScore.forEach((c, i) => {
             var newTr = $('<tr/>');
-            newTr.append($('<td/>', {text: i + 1}))
-            newTr.append($('<td/>', {text: c.username, class: 'nameTd'}))
-            newTr.append($('<td/>', {text: c.score, class: 'scoreTd'}))
-            $('#hsBody').append(newTr)
+            newTr.append($('<td/>', {text: i + 1}));
+            newTr.append($('<td/>', {text: c.username, class: 'nameTd'}));
+            newTr.append($('<td/>', {text: c.score, class: 'scoreTd'}));
+            $('#hsBody').append(newTr);
         })
     });
 }
 
 function SwitchToFlag() {
     mobileFlag = !mobileFlag;
-    $('#flagButton').toggleClass('active')
+    $('#flagButton').toggleClass('flagButton active');
 }
 
 function SwitchSize() {
     $('#chooseSize').text('Tacos');
+    mobileFlag = false;
+    $('#flagButton').attr('class', 'flagButton');
     $('#game').toggle();
     $('#size').toggle();
     $mineSweeper.empty();
