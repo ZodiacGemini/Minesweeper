@@ -193,7 +193,7 @@ h1 {
 
 .askCell {
     background-image: url('./img/question-512.png');
-    background-color: dodgerblue;
+    background-color: #f6f6f6;
     border: groove;
     border-color: black;
     background-size: cover;
@@ -201,7 +201,7 @@ h1 {
 
 .flagCell {
     background-image: url('./img/flag.png');
-    background-color: dodgerblue;
+    background-color: #f6f6f6;
     border: groove;
     border-color: black;
     background-size: cover;
@@ -210,7 +210,7 @@ h1 {
 .cell {
     border: groove;
     border-color: black;
-    background-color: dodgerblue;
+    background-color: #f6f6f6;
 }
 
 .row {
@@ -303,6 +303,7 @@ h1 {
         margin: auto;
         margin-bottom: 10px;
         width: 100%;
+        text-align: center;
     }
     input {
         width: 48%;

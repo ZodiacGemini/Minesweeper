@@ -127,7 +127,7 @@ function StartGame() {
     };
 
     $(document).on('dblclick', '.opencell', (e) => TriggerDoubleClick(e));
-    $(document).on('doubletap', '.opencell', (e) => TriggerDoubleClick(e));
+    $(document).on('doubletap', '.opencell', function (e){ e.preventDefault(); TriggerDoubleClick(e);});
     $(document).on('contextmenu', '.flagCell, .cell, .askCell', function(e) { TriggerRightClick(e)});
     $(document).on('contextmenu', '.opencell', function(e){return false;});
     $(document).on('click', '.cell', function (event) {
@@ -235,7 +235,6 @@ function StartGame() {
     function TriggerDoubleClick(e){
         e.stopImmediatePropagation();
         e.preventDefault();
-        e.currentTarget.preventDefault();
         var i = e.currentTarget.getAttribute('data-i');
         var j = e.currentTarget.getAttribute('data-j');
         i = parseInt(i);
