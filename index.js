@@ -438,5 +438,6 @@ $('#setSize1616').click(() => SetSize(16, 16));
 $('#setSize3016').click(() => SetSize(30, 16));
 $('#startGameButton').click(() => SetCustomSize());
 $('#switchSize').click(() => SwitchSize());
+$('#flagButton').click(() => SwitchToFlag());
 
 
