@@ -2,74 +2,114 @@ var $mineSweeper = $('#myMineSweeper');
 var height = 0;
 var width = 0;
 var mines = 0;
-var array = [];
 var flagCounter = 0;
 var timerAndHighscore = 1;
 var startTimer;
 var topTenScore = [];
 var database = firebase.database();
 var mobileFlag = false;
+var array = [];
 
+const ResetHighScore = () => {
+    $('#highScoreText').text('Lowscore ' + width + ' x ' + height);    
+    $('#hsBody').empty();    
+    topTenScore = []
+    database.ref('/highscore/' + width + height + '/').once('value').then(function(snapshot) {
+        let obj = snapshot.val()
+        for(var key in obj){
+            topTenScore.push({username: obj[key].username, score: obj[key].score});
+        }
+        topTenScore = topTenScore.sort((a, b) => a.score - b.score).slice(0, 10);
+        topTenScore.forEach((c, i) => {
+            var newTr = $('<tr/>');
+            newTr.append($('<td/>', {text: i + 1}));
+            newTr.append($('<td/>', {text: c.username, class: 'nameTd'}));
+            newTr.append($('<td/>', {text: c.score, class: 'scoreTd'}));
+            $('#hsBody').append(newTr);
+        })
+    });
+}
 
-function AddHighScore(number, name) {
-    var hsKey = database.ref().child('highscore').push().key;
-    var highScore = {score: number, username: name};
-    var updates = {};
+const AddHighScore = (number, name) => {
+    let hsKey = database.ref().child('highscore').push().key;
+    let highScore = {score: number, username: name};
+    let updates = {};
     updates['/highscore/' + width + height + '/' + hsKey] = highScore;
     database.ref().update(updates)
     ResetHighScore();
 }
 
-function UpdateCounterText(){
-    var nextCounter = array
-    .reduce((p, c) => p - c.filter(o => o.flag).length, mines);
-    $('#counterText').text(nextCounter)
-    flagCounter = nextCounter;
-};
 
-function StartGame() {
-    if(width === 9 && height === 9){
-        mines = 10;
-    }
-
-    else if(width === 16 && height === 16){
-        mines = 40;
-    }
-
-    else if(width === 30 && height === 16){
-        mines = 99;
-    }
-
-    if(width > 10){
-        $('#minesweep').attr('class', 'mineSweeperLarge mineSweeper');
-    }
-
-    else {
-        $('#minesweep').attr('class', 'mineSweeper')
-    }
-
-    array = [];
-    for (var i = 0; i < height; i++) {
-        array[i] = [];
-        for (var j = 0; j < width; j++) {
-            array[i][j] = {
-                number: 0,
-                open: false,
-                mine: false,
-                flag: false,
-                ask: false
-            };
+const StartGame = () => {
+    const AskForHighScoreSubmit = () => {
+        if(topTenScore.length >= 10){
+            if(topTenScore[9].score > timerAndHighscore){
+                    if(confirm('Top ten! Submit highscore?')){
+                        var name = prompt('Choose name (max 10 characters)')
+                        while(true){
+                            if(name.length <= 10){
+                                AddHighScore(timerAndHighscore, name);
+                                break;
+                        }
+                            else{
+                                name = prompt('Max 10 characters');
+                        }
+                    }
+                }
+            }
+            else{
+                alert('Yay!! no highscore though!');
+            }
+        }
+        else{
+            if(confirm('Top ten! Submit highscore?')){
+                var name = prompt('Choose name (max 10 characters)')
+                while(true){
+                    if(name.length <= 10){
+                        AddHighScore(timerAndHighscore, name);
+                        break;
+                    }
+                    else{
+                        name = prompt('Max 10 characters');
+                    }
+                }
+            }
         }
     }
-    for (var i = 0; i < mines; i++) {
-        AddRandomMine();
+
+    const UpdateCounterText = () => {
+        let nextCounter = array
+        .reduce((p, c) => p - c.filter(o => o.flag).length, mines);
+        $('#counterText').text(nextCounter);
+        flagCounter = nextCounter;
+    };
+
+    const SwitchToFlag = () => {
+        mobileFlag = !mobileFlag;
+        $('#flagButton').toggleClass('flagButton active');
     }
 
-    function AddRandomMine() {
-        var loop = true;
+    const UserWon = (i, j) => {
+        let closedCells = array
+        .reduce((p, c) => c.filter(o => !o.open).length + p, 0);
+        
+        if (closedCells == mines && array[i][j].mine == false) {
+            array[i][j].open = true;
+            $('.playAgain').attr('class', 'userWon')
+            array.forEach(r => r.forEach(cell => cell.open = true));
+            render();
+            AskForHighScoreSubmit();
+            return true;
+        }
+        else
+            return false;
+    }
+
+    const AddRandomMine = () => {
+        let loop = true;
         while (loop) {
-            var column = Math.floor(Math.random() * width)
-            var row = Math.floor(Math.random() * height)
+            let column = Math.floor(Math.random() * width)
+            let row = Math.floor(Math.random() * height)
 
             if (!array[row][column].mine) {
                 array[row][column].mine = true;
@@ -78,41 +118,48 @@ function StartGame() {
         }
     };
 
-    AddNumbers();
-    function AddNumbers() {
-        for (var i = 0; i < array.length; i++) {
-            for (var j = 0; j < array[i].length; j++) {
-                if (!array[i][j].mine) {
-                    var surroundingMineCells = GetSurroundingMines(array, i, j);
-                    array[i][j].number = surroundingMineCells.length;
-                }
-            }
-        }
+    const FilterCells = (i, j) => {
+        let surroundingCells = [[i + 1, j], [i + 1, j + 1], [i + 1, j - 1], [i - 1, j], [i - 1, j - 1], [i - 1, j + 1], [i, j + 1], [i, j - 1]];
+        let validCells = surroundingCells.filter((cell) => {
+            let i = cell[0]
+            let j = cell[1]
+            return i >= 0 && i < array.length && j >= 0 && j < array[0].length
+        });
+        return validCells;
     };
 
-    function GetSurroundingMines(array, i, j) {
-        var validCells = FilterCells(i, j);
-        var realCells = validCells.map(function (cell) {
-            var i = cell[0]
-            var j = cell[1]
+    const GetSurroundingMines = (i, j) => {
+        let validCells = FilterCells(i, j);
+        let realCells = validCells.map(function (cell) {
+            let i = cell[0]
+            let j = cell[1]
             return array[i][j]
-        })
-        var numberOfMines = realCells.filter(function (array) {
+        });
+        let numberOfMines = realCells.filter(function (array) {
             return array.mine;
-        })
+        });
         return numberOfMines;
     };
 
-    Reset();
-    render();
-    function render() {
+    const AddNumbers = () => {
+        for (let i = 0; i < array.length; i++) {
+            for (let j = 0; j < array[i].length; j++) {
+                if (!array[i][j].mine) {
+                    let surroundingMineCells = GetSurroundingMines(i, j);
+                    array[i][j].number = surroundingMineCells.length;
+                };
+            };
+        };
+    };
+
+    const render = () => {
         $mineSweeper.empty();
-        for (var i = 0; i < array.length; i++) {
-            var $myRow = $('<div/>', { class: 'row' })
-            $mineSweeper.append($myRow)
-            for (var j = 0; j < array[i].length; j++) {
-                var selectedCell = array[i][j]
-                var text = selectedCell.number > 0 ? selectedCell.number : ' ';
+        for (let i = 0; i < array.length; i++) {
+            let $myRow = $('<div/>', { class: 'row' });
+            $mineSweeper.append($myRow);
+            for (let j = 0; j < array[i].length; j++) {
+                let selectedCell = array[i][j];
+                let text = selectedCell.number > 0 ? selectedCell.number : ' ';
                 $myRow.append($('<button/>', {
                     type: 'button', 'data-i': i, 'data-j': j,
                     text: selectedCell.open ? text : ' ',
@@ -120,42 +167,16 @@ function StartGame() {
                     : selectedCell.open && selectedCell.mine ? 'openmineCell' 
                     : selectedCell.open ? 'opencell' 
                     : selectedCell.flag ? 'flagCell' 
-                    : selectedCell.ask ? 'askCell' : 'cell'
-                }))
-            }
-        }
+                    : selectedCell.ask ? 'askCell' 
+                    : 'cell'
+                }));
+            };
+        };
     };
 
-    $(document).on('dblclick', '.opencell', (e) => TriggerDoubleClick(e));
-    $(document).on('doubletap', '.opencell', function (e){TriggerDoubleClick(e);});
-    $(document).on('contextmenu', '.flagCell, .cell, .askCell', function(e) { TriggerRightClick(e)});
-    $(document).on('contextmenu', '.opencell', function(e){return false;});
-    $(document).on('click', '.cell', function (event) {
-        if(mobileFlag) {
-            TriggerRightClick(event);
-            return;
-        }
-        TriggerClick(event);
-    });
-    $(document).on('click', '.askCell, .flagCell', function (event) {
-        if(mobileFlag){
-            TriggerRightClick(event)
-        }
-    });
-
-    function FilterCells(i, j){
-        var surroundingCells = [[i + 1, j], [i + 1, j + 1], [i + 1, j - 1], [i - 1, j], [i - 1, j - 1], [i - 1, j + 1], [i, j + 1], [i, j - 1]];
-        var validCells = surroundingCells.filter((cell) => {
-            var i = cell[0]
-            var j = cell[1]
-            return i >= 0 && i < array.length && j >= 0 && j < array[0].length
-        });
-        return validCells;
-    }
-
-    function OpenSurroundingCells(i, j) {
-        var validCells = FilterCells(i, j);
-        var cellsForRecursion = validCells.filter((cell) => {
+    const OpenSurroundingCells = (i, j) => {
+        let validCells = FilterCells(i, j);
+        let cellsForRecursion = validCells.filter((cell) => {
             i = cell[0]
             j = cell[1]
             return array[i][j].open == false && array[i][j].number == 0;
@@ -170,9 +191,25 @@ function StartGame() {
         return cellsForRecursion;
     };
 
-    function OpenSurroundingNonFlaggedCells(i, j) {
-        var validCells = FilterCells(i, j);
-        var flagCells = validCells.filter((cell) => {
+    const ClickedOnZero = (i, j) => {
+        array[i][j].open = true;
+            let allCellsToCheck = OpenSurroundingCells(i, j);
+            let loopingLength = allCellsToCheck;
+            for (let k = 0; k < loopingLength.length; k++) {
+                i = allCellsToCheck[k][0];
+                j = allCellsToCheck[k][1];
+                let returnedCells = OpenSurroundingCells(i, j);
+                if (returnedCells.length > 0) {
+                    for (let l = 0; l < returnedCells.length; l++) {
+                        loopingLength.push(returnedCells[l]);
+                };
+            };
+        };
+    };
+
+    const OpenSurroundingNonFlaggedCells = (i, j) => {
+        let validCells = FilterCells(i, j);
+        let flagCells = validCells.filter((cell) => {
             let k = cell[0]
             let l = cell[1]
             return array[k][l].flag
@@ -202,11 +239,11 @@ function StartGame() {
         render();
     };
 
-    function TriggerClick(event){
+    const TriggerClick = (event) => {
         event.stopImmediatePropagation();
-        var $cell = event.currentTarget
-        var i = $cell.getAttribute('data-i');
-        var j = $cell.getAttribute('data-j');
+        let $cell = event.currentTarget
+        let i = $cell.getAttribute('data-i');
+        let j = $cell.getAttribute('data-j');
         i = parseInt(i);
         j = parseInt(j);
 
@@ -232,24 +269,24 @@ function StartGame() {
         render();
     }
 
-    function TriggerDoubleClick(e){
+    const TriggerDoubleClick = e => {
         e.stopImmediatePropagation();
         e.preventDefault();
-        var i = e.currentTarget.getAttribute('data-i');
-        var j = e.currentTarget.getAttribute('data-j');
+        let i = e.currentTarget.getAttribute('data-i');
+        let j = e.currentTarget.getAttribute('data-j');
         i = parseInt(i);
         j = parseInt(j);
         OpenSurroundingNonFlaggedCells(i, j);
     }
 
-    function TriggerRightClick(event){
-        var cell = event.currentTarget;
+    const TriggerRightClick = event => {
+        let cell = event.currentTarget;
         event.preventDefault();
         event.stopImmediatePropagation();
         const setCellClass = (n) => cell.setAttribute('class', n);
 
-        var i = cell.getAttribute('data-i');
-        var j = cell.getAttribute('data-j');
+        let i = cell.getAttribute('data-i');
+        let j = cell.getAttribute('data-j');
         
         switch(cell.getAttribute('class')){
             case 'cell':
@@ -276,41 +313,90 @@ function StartGame() {
         UpdateCounterText(mines);
     }
 
-    function ClickedOnZero(i, j) {
-        array[i][j].open = true;
-            var allCellsToCheck = OpenSurroundingCells(i, j);
-            var loopingLength = allCellsToCheck;
-            for (var k = 0; k < loopingLength.length; k++) {
-                i = allCellsToCheck[k][0];
-                j = allCellsToCheck[k][1];
-                var returnedCells = OpenSurroundingCells(i, j);
-                if (returnedCells.length > 0) {
-                    for (var l = 0; l < returnedCells.length; l++) {
-                        loopingLength.push(returnedCells[l]);
-                }
-            }
-        }
+    if(width === 9 && height === 9){
+        mines = 10;
     }
 
-    function UserWon(i, j) {
-        var closedCells = array
-        .reduce((p, c) => c.filter(o => !o.open).length + p, 0);
-        
-        if (closedCells == mines && array[i][j].mine == false) {
-            array[i][j].open = true;
-            $('.playAgain').attr('class', 'userWon')
-            array.forEach(r => r.forEach(cell => cell.open = true));
-            render();
-            AskForHighScoreSubmit();
-            return true;
-        }
-        else
-            return false;
+    else if(width === 16 && height === 16){
+        mines = 40;
     }
+
+    else if(width === 30 && height === 16){
+        mines = 99;
+    }
+
+    if(width > 10){
+        $('#minesweep').attr('class', 'mineSweeperLarge mineSweeper');
+    }
+
+    else {
+        $('#minesweep').attr('class', 'mineSweeper')
+    }
+
+    const Reset = () => {
+        UpdateCounterText();
+        
+        $('#playAgain').attr('class', 'playAgain');
+        
+        try {clearInterval(startTimer);} catch (error) {}
+        
+        mobileFlag = false;
+        $('#flagButton').attr('class', 'flagButton');
+        
+        timerAndHighscore = 1;
+        $('#timer').text(timerAndHighscore);
+        startTimer = setInterval(() => {
+            timerAndHighscore++; $('#timer').text(timerAndHighscore)
+        }, 1000);
+
+        array = [];
+
+        for (let i = 0; i < height; i++) {
+            array[i] = [];
+            for (let j = 0; j < width; j++) {
+                array[i][j] = {
+                    number: 0,
+                    open: false,
+                    mine: false,
+                    flag: false,
+                    ask: false
+                };
+            }
+        }
+
+        for (let i = 0; i < mines; i++) {
+            AddRandomMine();
+        }
+
+        AddNumbers();
+        
+        render();
+    }
+
+    
+    $(document).on('dblclick', '.opencell', (e) => TriggerDoubleClick(e));
+    $(document).on('doubletap', '.opencell', (e) => TriggerDoubleClick(e));
+    $(document).on('contextmenu', '.flagCell, .cell, .askCell', (e) => TriggerRightClick(e));
+    $(document).on('contextmenu', '.opencell', (e) =>  false);
+    $(document).on('click', '.cell', event => {
+        if(mobileFlag) {
+            TriggerRightClick(event);
+            return;
+        }
+        TriggerClick(event);
+    });
+    $(document).on('click', '.askCell, .flagCell', event => {
+        if(mobileFlag){
+            TriggerRightClick(event)
+        }
+    });
+    Reset();
+    $('#playAgain').click(() => Reset());
     
 }
 
-function SetSize(w, h) {
+
+const SetSize = (w, h) => {
     width = parseInt(w);
     height = parseInt(h);
     mines = Math.round((width * height) / 8) + 1;
@@ -320,13 +406,15 @@ function SetSize(w, h) {
     $('#game').toggle();
 }
 
-function SetCustomSize(w, h){
+const SetCustomSize = (w, h) => {
     height = $('#height').val();
     height = parseInt(height);
     width = $('#width').val();
     width = parseInt(width);
+    $('#width').val('');
+    $('#height').val('');
     
-    if(height >= 2 && width >= 2 && height <= 50 && width <= 50){
+    if(height <= 50 && width <= 50){
         mines = Math.round((width * height) / 8) + 1;
         $('#size').toggle();
         $('#game').toggle();
@@ -339,82 +427,16 @@ function SetCustomSize(w, h){
     }
 }
 
-function AskForHighScoreSubmit() {
-    if(topTenScore.length >= 10){
-        if(topTenScore[9].score > timerAndHighscore){
-                if(confirm('Top ten! Submit highscore?')){
-                    var name = prompt('Choose name (max 10 characters)')
-                    while(true){
-                        if(name.length <= 10){
-                            AddHighScore(timerAndHighscore, name);
-                            break;
-                    }
-                        else{
-                            name = prompt('Max 10 characters');
-                    }
-                }
-            }
-        }
-        else{
-            alert('Yay!! no highscore though!');
-        }
-    }
-    else{
-        if(confirm('Top ten! Submit highscore?')){
-            var name = prompt('Choose name (max 10 characters)')
-            while(true){
-                if(name.length <= 10){
-                    AddHighScore(timerAndHighscore, name);
-                    break;
-                }
-                else{
-                    name = prompt('Max 10 characters');
-                }
-            }
-        }
-    }
-}
-
-function Reset() {
-    UpdateCounterText();
-    $('#playAgain').attr('class', 'playAgain');
-    try {clearInterval(startTimer);} catch (error) {}
-    timerAndHighscore = 1;
-    $('#timer').text(timerAndHighscore);
-    startTimer = setInterval(() => {timerAndHighscore++; $('#timer').text(timerAndHighscore)}, 1000);
-    
-}
-
-function ResetHighScore() {
-    $('#highScoreText').text('Lowscore ' + width + ' x ' + height);    
-    $('#hsBody').empty();    
-    topTenScore = []
-    database.ref('/highscore/' + width + height + '/').once('value').then(function(snapshot) {
-        let obj = snapshot.val()
-        for(var key in obj){
-            topTenScore.push({username: obj[key].username, score: obj[key].score});
-        }
-        topTenScore = topTenScore.sort((a, b) => a.score - b.score).slice(0, 10);
-        topTenScore.forEach((c, i) => {
-            var newTr = $('<tr/>');
-            newTr.append($('<td/>', {text: i + 1}));
-            newTr.append($('<td/>', {text: c.username, class: 'nameTd'}));
-            newTr.append($('<td/>', {text: c.score, class: 'scoreTd'}));
-            $('#hsBody').append(newTr);
-        })
-    });
-}
-
-function SwitchToFlag() {
-    mobileFlag = !mobileFlag;
-    $('#flagButton').toggleClass('flagButton active');
-}
-
-function SwitchSize() {
+const SwitchSize = () => {
     $('#chooseSize').text('Tacos');
-    mobileFlag = false;
-    $('#flagButton').attr('class', 'flagButton');
     $('#game').toggle();
     $('#size').toggle();
-    $mineSweeper.empty();
 }
+
+$('#setSize99').click(() => SetSize(9, 9));
+$('#setSize1616').click(() => SetSize(16, 16));
+$('#setSize3016').click(() => SetSize(30, 16));
+$('#startGameButton').click(() => SetCustomSize());
+$('#switchSize').click(() => SwitchSize());
+
+

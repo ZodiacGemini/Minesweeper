@@ -13,15 +13,15 @@
         <div id="size" class="size">
             <div>
                 <p>Toast</p>
-                <button class="defaultButton" onclick="SetSize(9, 9)">9 x 9</button>
+                <button class="defaultButton" id="setSize99">9 x 9</button>
             </div>
             <div>
                 <p>Pasta Bolognese</p>                
-                <button class="defaultButton" onclick="SetSize(16, 16)">16 x 16</button>
+                <button class="defaultButton" id="setSize1616">16 x 16</button>
             </div>
             <div>
-                <p>Boeuf Bourguignon</p>                
-                <button class="defaultButton" onclick="SetSize(30, 16)">30 x 16</button>            
+                <p>Boeuf Bourguignon</p>       
+                <button class="defaultButton" id="setSize3016">30 x 16</button>            
             </div>
             <div>
                 <p id="chooseSize">Tacos</p>
@@ -30,15 +30,15 @@
                         <input type="number" id="width" placeholder="Width"/>
                         <input type="number" id="height" placeholder="Height"/>
                     </div>
-                    <button class="defaultButton" id="startGameButton" onclick="SetCustomSize()">Go</button>
+                    <button class="defaultButton" id="startGameButton">Go</button>
                 </div>
             </div>
         </div>
         <div id="game" hidden="hidden">
-            <button class="defaultButton" id="switchSize" onclick="SwitchSize()">Switch Size</button>
+            <button class="defaultButton" id="switchSize">Switch Size</button>
             <div class="infoBox">
                 <p id="counterText" class="counterText"></p>
-                <button id="playAgain" class="playAgain" onclick="StartGame()"></button>
+                <button id="playAgain" class="playAgain"></button>
                 <p id="timer" class="timer">1</p>
                 <button id="flagButton" class="flagButton" onclick="SwitchToFlag()"></button>
             </div>
