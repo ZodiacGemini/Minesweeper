@@ -78,10 +78,9 @@ const StartGame = () => {
     }
 
     const UpdateCounterText = () => {
-        let nextCounter = array
+        flagCounter = array
         .reduce((p, c) => p - c.filter(o => o.flag).length, mines);
-        $('#counterText').text(nextCounter);
-        flagCounter = nextCounter;
+        $('#counterText').text(flagCounter);
     };
 
     const SwitchToFlag = () => {
