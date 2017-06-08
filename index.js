@@ -428,7 +428,7 @@ const SetCustomSize = (w, h) => {
 }
 
 const SwitchSize = () => {
-    $('#chooseSize').text('Tacos');
+    $('#chooseSize').html('<p>Tacos</p>');
     $('#game').toggle();
     $('#size').toggle();
 }
