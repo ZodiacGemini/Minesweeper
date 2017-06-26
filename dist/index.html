@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Minesweeper</title>
+</head>
+<body>
+    <div id="wrapper">
+        <h1>Minesweeper</h1>
+        <div id="size" class="size">
+            <div>
+                <p>Toast</p>
+                <button class="defaultButton" id="setSize99">9 x 9</button>
+            </div>
+            <div>
+                <p>Pasta Bolognese</p>                
+                <button class="defaultButton" id="setSize1616">16 x 16</button>
+            </div>
+            <div>
+                <p>Boeuf Bourguignon</p>       
+                <button class="defaultButton" id="setSize3016">30 x 16</button>            
+            </div>
+            <div>
+                <p id="chooseSize">Tacos</p>
+                <div class="customSize">
+                    <div class="whContainer">
+                        <input type="number" min="2" max="50" id="width" placeholder="Width"/>
+                        <input type="number" min="2" max="50" id="height" placeholder="Height"/>
+                    </div>
+                    <button class="defaultButton" id="startGameButton">Go</button>
+                </div>
+            </div>
+        </div>
+        <div id="game" hidden="hidden">
+            <button class="defaultButton" id="switchSize">Switch Size</button>
+            <div class="infoBox">
+                <p id="counterText" class="counterText"></p>
+                <button id="playAgain" class="playAgain"></button>
+                <p id="timer" class="timer">1</p>
+                <button id="flagButton" class="flagButton"></button>
+            </div>
+            <div id="minesweep" class="mineSweeper">
+                <div id="myMineSweeper"></div>
+            </div>
+            <div class="highscoreTable">
+            <p id="highScoreText">Lowscore</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th id="numberScore"></th>
+                            <th class="nameTh">Name</th>
+                            <th class="scoreTd">Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="hsBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/4.1.1/firebase.js"></script>
+    <script>
+        var config = {
+            apiKey: "AIzaSyAi63Gr0pF8jtFXDY3ZrbxgW3U5tmyrxvU",
+            authDomain: "minesweeper-7f039.firebaseapp.com",
+            databaseURL: "https://minesweeper-7f039.firebaseio.com",
+            projectId: "minesweeper-7f039",
+            storageBucket: "minesweeper-7f039.appspot.com",
+            messagingSenderId: "893384414814"
+        };
+        firebase.initializeApp(config);
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.finger/0.1.6/jquery.finger.js"></script>  
+    <script src="bundle.js"></script>
+</body>
+</html>
