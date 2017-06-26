@@ -1,24 +1,36 @@
-var path = require("path");
+let path = require('path');
 
-var DIST_DIR = path.resolve(__dirname, "dist");
-var SRC_DIR = path.resolve(__dirname, "src");
-
-var config = {
-    entry: SRC_DIR + "/index.js",
-    output: {
-        path: DIST_DIR,
-        filename: "bundle.js",
-        publicPath: "/public/"
-    },
-    module: {
-        loaders: [
-            {
-                test: /\.js?/,
-                include: SRC_DIR,
-                loader: "babel-loader"
-            }
-        ]
-    }
+module.exports = {
+  entry: './src/index.js',
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist')
+  },
+  module: {
+      rules: [
+          {
+              test: /\.css$/,
+              use: [
+                  'style-loader',
+                  'css-loader'
+              ]
+          },
+          {
+              test: /\.(jpg|png)$/,
+              use: [
+                  'file-loader'
+              ]
+          },
+          {
+              test: /\.js$/,
+              exclude: /node_modules/,
+              use: {
+                  loader: 'babel-loader',
+                  options: {
+                      presets: ['es2015']
+                  }
+              }
+          }
+      ]
+  }
 };
-
-module.exports = config;
